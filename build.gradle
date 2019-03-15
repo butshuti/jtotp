@@ -1,0 +1,35 @@
+apply plugin: 'java-library'
+apply plugin: 'maven-publish'
+
+repositories { jcenter() }
+
+dependencies {
+    testImplementation 'junit:junit:4.12'
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.java.srcDirs
+    classifier "sources"
+}
+
+publishing {
+    publications {
+        sources(MavenPublication) {
+            groupId 'io.github.butshuti'
+            artifactId 'totp'
+            version '1.0.0'
+            artifact(sourceJar)
+        }
+    }
+
+    repositories {
+        maven {
+            mavenLocal()
+        }
+    }
+}
+
+tasks.withType(PublishToMavenRepository) { it.dependsOn test }
