@@ -1,4 +1,4 @@
-package io.github.butshuti.totp;
+package io.github.butshuti.jtotp;
 
 import junit.framework.TestCase;
 

@@ -19,7 +19,7 @@ publishing {
     publications {
         sources(MavenPublication) {
             groupId 'io.github.butshuti'
-            artifactId 'totp'
+            artifactId 'jtotp'
             version '1.0.0'
             artifact(sourceJar)
         }
