@@ -1,5 +1,6 @@
 apply plugin: 'java-library'
 apply plugin: 'maven-publish'
+apply plugin: 'signing'
 
 repositories { jcenter() }
 
@@ -9,6 +10,8 @@ dependencies {
 
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
+
+version = "1.0.0-SNAPSHOT"
 
 task javadocJar(type: Jar) {
     from javadoc
@@ -22,25 +25,45 @@ task sourceJar(type: Jar) {
 
 publishing {
     publications {
-        sources(MavenPublication) {
-            groupId 'io.github.butshuti'
-            artifactId 'jtotp'
-            version '1.0.0'
+        mavenArchives(MavenPublication) {
+            groupId('io.github.butshuti')
+            artifactId('jtotp')
             artifact(sourceJar)
-        }
-        javadoc(MavenPublication) {
-            groupId 'io.github.butshuti'
-            artifactId 'jtotp'
-            version '1.0.0'
             artifact(javadocJar)
+            pom {
+                name = 'Java TOTP'
+                description = 'A simple Java library for the TOTP (RFC6238) algorithm'
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://spdx.org/licenses/MIT.html'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/butshuti/jtotp.git'
+                    developerConnection = 'scm:git:ssh://github.com/butshuti/jtotp.git'
+                    url = 'https://github.com/butshuti/jtotp'
+                }
+            }
         }
     }
 
     repositories {
         maven {
-            mavenLocal()
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            name("ossrh")
+            credentials {
+                username "${ossrhUsername}"
+                password "${ossrhPassword}"
+            }
         }
     }
 }
+
+/*signing {
+    sign publishing.publications.mavenArchives
+}*/
 
 tasks.withType(PublishToMavenRepository) { it.dependsOn test }
