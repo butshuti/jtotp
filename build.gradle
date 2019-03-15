@@ -10,6 +10,11 @@ dependencies {
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
+task javadocJar(type: Jar) {
+    from javadoc
+    classifier "javadoc"
+}
+
 task sourceJar(type: Jar) {
     from sourceSets.main.java.srcDirs
     classifier "sources"
@@ -22,6 +27,12 @@ publishing {
             artifactId 'jtotp'
             version '1.0.0'
             artifact(sourceJar)
+        }
+        javadoc(MavenPublication) {
+            groupId 'io.github.butshuti'
+            artifactId 'jtotp'
+            version '1.0.0'
+            artifact(javadocJar)
         }
     }
 
